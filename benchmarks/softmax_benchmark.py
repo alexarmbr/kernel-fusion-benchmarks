@@ -26,8 +26,6 @@ for vector_size in VECTOR_SIZES:
     print(f"Vector size: {vector_size}")
     pytorch_time = benchmark_softmax((BATCH_SIZE, vector_size), lambda x: torch.nn.functional.softmax(x, dim=1))
     print(f"Pytorch time: {pytorch_time}")
-    # myops_time = benchmark_softmax((BATCH_SIZE, vector_size), lambda x: row_softmax_1(x))
-    # print(f"row softmax 1 time: {myops_time}")
     myops2_time = benchmark_softmax((BATCH_SIZE, vector_size), lambda x: row_softmax_2(x))
     print(f"row softmax 2 time: {myops2_time}")
     print(f"speedup: {pytorch_time/myops2_time}")
