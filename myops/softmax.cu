@@ -1,8 +1,5 @@
 #include <cub/cub.cuh>
-
 #include <torch/extension.h>
-
-
 
 // from here https://github.com/NVIDIA/online-softmax/blob/master/online_softmax_benchmark.cu#L156
 struct __align__(8) MD
@@ -67,9 +64,10 @@ torch::Tensor softmax_cuda(torch::Tensor input)
     TORCH_CHECK(input.device().is_cuda(), "softmax input must be a CUDA tensor")
     auto output = torch::zeros_like(input);
     const int batch_size = input.size(0);
+    const int vector_size = input.size(1);
     const int threadblock_size = 512;
 
-    online_softmax<threadblock_size><<<batch_size, threadblock_size>>>(input.data_ptr<float>(), output.data_ptr<float>(), batch_size);
+    online_softmax<threadblock_size><<<batch_size, threadblock_size>>>(input.data_ptr<float>(), output.data_ptr<float>(), vector_size);
     return output;
 }
 
